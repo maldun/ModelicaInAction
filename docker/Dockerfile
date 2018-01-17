@@ -78,8 +78,13 @@ RUN apt-get install -y autoconf
 # Checkout the JModelica.org source code
 RUN mkdir -p /home/docker/installed/JModelica
 
+###########################################################################################
+# This needs a nasty hack for more modern versions, since assimulo does not fit in svn ...
 WORKDIR /home/docker/to_install
-RUN svn co https://svn.jmodelica.org/trunk JModelica.org
+RUN svn co https://svn.jmodelica.org/trunk JModelica.org; exit 0 # <- hack
+WORKDIR /home/docker/to_install/JModelica.org/external
+RUN svn co https://svn.jmodelica.org/assimulo/trunk/ Assimulo # Checkout the lib manually
+###########################################################################################
 WORKDIR /home/docker/to_install/JModelica.org
 RUN mkdir build
 WORKDIR /home/docker/to_install/JModelica.org/build
